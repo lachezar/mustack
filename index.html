@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Mustack</title>
+    
+    <style>
+		body {
+		    margin: 0;
+			padding: 0;
+		}
+		
+        #mustache_type {
+            text-align: center
+        }
+        
+        #mustache_type button {
+            margin: 10px;
+        }
+        
+        #install {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+        }
+        
+        #mustache {
+            display: block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<img id="mustache" src="" alt="Pick a mustache type:" />
+
+<div id="mustache_type">
+    <button data-type="0"><img src="images/mustache_0.png" alt=""></button>
+    <button data-type="1"><img src="images/mustache_1.png" alt=""></button>
+    <button data-type="2"><img src="images/mustache_2.png" alt=""></button>
+    <button data-type="3"><img src="images/mustache_3.png" alt=""></button>
+    <button data-type="4"><img src="images/mustache_4.png" alt=""></button>
+    <button data-type="5"><img src="images/mustache_5.png" alt=""></button>
+</div>
+
+<button id="install">Install the app</button>
+
+<script>
+    /* todo
+    - make subdomain mustack.dailyffs.com Y
+    - show link to the mustached image N
+    - buttons showing the mustache types Y
+    - mustaches are from 0 to 5 Y
+    - delete images on the server older than 2 minutes Y
+    - put a save button to save the image?
+    - data uri transparent pixel N
+    - loading spinner 
+    - fix the install button
+    - make buttons bigger Y
+    - make icons for the app Y
+    - move server code in the root folder Y
+    - put styles in the head style element
+    - create a repo in github
+    */
+(function (d, w) {
+    var baseUrl = location.href.substring(0, location.href.lastIndexOf("/"));
+    var mustachifyUrl = "http://mustachify.me/";
+    var mustacheButtons = d.querySelectorAll("#mustache_type button");
+    var mustacheImage = d.getElementById('mustache');
+    var viewportWidth = w.innerWidth + "px";
+    var i;
+    
+    for (i = 0; i < mustacheButtons.length; i++) {
+        mustacheButtons[i].onclick = function () {
+            var mustacheType = this.dataset.type;
+            var pickPhoto = new MozActivity({
+                name: "pick",
+                data: {
+                    type: ["image/png", "image/jpg", "image/jpeg"]
+                }
+            });
+            
+            pickPhoto.onsuccess = function () {
+				mustacheImage.src = "/images/ajax-loader.gif";
+			
+                var xhr = new XMLHttpRequest();
+                var imageUploadUrl = baseUrl + "/upload.php";
+                xhr.open("POST", imageUploadUrl, true);
+                
+                xhr.onload = function(e) {
+                    if (this.status == 200) {
+                      mustacheImage.src = mustachifyUrl + mustacheType + "?src=" + encodeURIComponent(baseUrl + "/tmp/" + this.response) + "&" + (new Date()).getTime();
+                      mustacheImage.style.width = viewportWidth;
+                    } else {
+                        alert("oops, error has occurred :{");
+                    }
+                };
+                
+                xhr.send(this.result.blob);
+            };
+
+            pickPhoto.onerror = function () {
+                alert("No image selected :{");
+            };
+        };
+    }
+    
+    if (navigator.mozApps) {
+        var checkIfInstalled = navigator.mozApps.getSelf();
+        checkIfInstalled.onsuccess = function () {
+            var install = d.getElementById('install')
+            
+            if (checkIfInstalled.result) {
+                // Already installed
+                install.style.display = "none";
+            } else {
+                var manifestURL = baseUrl + "/manifest.webapp";
+                install.onclick = function () {
+                    var installApp = navigator.mozApps.install(manifestURL);
+                    installApp.onsuccess = function(data) {
+                        install.style.display = "none";
+                    };
+                    installApp.onerror = function() {
+                        alert("Install failed\n\n:" + installApp.error.name);
+                    };
+                };
+            }
+        };
+    }
+}(document, window));
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "version": "0.3",
+    "name": "Mustack",
+    "launch_path": "/index.html",
+    "description": ":{)",
+    "icons": {
+		"60": "/images/icon.png",
+        "128": "/images/icon128.png"
+    },
+    "developer": {
+        "name": "Lucho Yankov",
+        "url": "https://github.com/lucho870601"
+    },
+    "installs_allowed_from": ["*"],
+    "default_locale": "en"
+}
