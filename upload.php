@@ -5,7 +5,7 @@ const TMP_DIR = "tmp";
 // delete images older than 10 minutes to save space
 if ($dh = opendir(TMP_DIR)) {
     while (false !== ($file = readdir($dh))) {
-        if ((time() - filectime(TMP_DIR . "/" . $file)) > 10 * 60) {  
+        if (strlen($file) > 2 && (time() - filectime(TMP_DIR . "/" . $file)) > 10 * 60) {  
             unlink(TMP_DIR . "/" . $file);
         }
     }
