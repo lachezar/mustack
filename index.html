@@ -6,11 +6,11 @@
     <title>Mustack</title>
     
     <style>
-		body {
-		    margin: 0;
-			padding: 0;
-		}
-		
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
         #mustache_type {
             text-align: center
         }
@@ -82,8 +82,8 @@
             });
             
             pickPhoto.onsuccess = function () {
-				mustacheImage.src = "/images/ajax-loader.gif";
-			
+                mustacheImage.src = "/images/ajax-loader.gif";
+            
                 var xhr = new XMLHttpRequest();
                 var imageUploadUrl = baseUrl + "/upload.php";
                 xhr.open("POST", imageUploadUrl, true);
