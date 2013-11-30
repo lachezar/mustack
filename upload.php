@@ -1,6 +1,6 @@
 <?php
 
-const TMP_DIR = "tmp";
+define('TMP_DIR', 'tmp');
 
 // delete images older than 10 minutes to save space
 if ($dh = opendir(TMP_DIR)) {
