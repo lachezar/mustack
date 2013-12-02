@@ -74,8 +74,11 @@
                 
                 xhr.onload = function(e) {
                     if (this.status == 200) {
-                      mustacheImage.src = mustachifyUrl + mustacheType + "?src=" + encodeURIComponent(baseUrl + "/tmp/" + this.response) + "&" + (new Date()).getTime();
-                      mustacheImage.style.width = viewportWidth;
+                        mustacheImage.onerror = function() { 
+                            alert("Error connecting to http://mustachify.me\nTry again later :{"); 
+                        };
+                        mustacheImage.src = mustachifyUrl + mustacheType + "?src=" + encodeURIComponent(baseUrl + "/tmp/" + this.response) + "&" + (new Date()).getTime();
+                        mustacheImage.style.width = viewportWidth;
                     } else {
                         alert("oops, error has occurred :{");
                     }
